@@ -1,1 +1,41 @@
 /* You can add global styles to this file, and also import other style files */
+.ant-upload {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  color: rgba(0,0,0,.85);
+  font-size: 14px;
+  width: 100% !important;
+  font-variant: tabular-nums;
+  line-height: 1.5715;
+  list-style: none;
+  font-feature-settings: 'tnum';
+  outline: 0;
+}
+.ant-input, .ant-select-selector, .ant-picker, .ant-input-group-addon, .ant-input-affix-wrapper, .ant-input-number, .ant-radio-button-wrapper, .ant-mentions {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 1px 0 rgba(0, 0, 0, 0.025);
+}
+.ant-menu-dark .ant-menu-sub, .ant-menu.ant-menu-dark, .ant-menu.ant-menu-dark .ant-menu-sub {
+  color: rgba(255,255,255,.65);
+  background: #ffffff !important;line-height: 0 !important;
+}
+.ant-layout-header {
+  height: 64px;
+  padding: 0 50px;
+  color: rgba(0,0,0,.85);box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  line-height: 64px;
+  background: #ffffff !important;
+}
+.logo {
+  width: 120px;
+  height: 31px;
+  background: rgba(255, 255, 255, 0.2);
+   margin: 0px 0px 0px 0 !important;
+  float: left;
+}
+
+
+
+nz-menu {
+  line-height: 42px;
+}

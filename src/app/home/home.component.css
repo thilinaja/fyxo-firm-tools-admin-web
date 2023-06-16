@@ -1,0 +1,56 @@
+/* status color */
+.status-queued {
+  color: red;
+}
+
+.status-live {
+  color: blue;
+}
+
+.status-completed {
+  color: green;
+}
+
+.status-stopped {
+  color: orange;
+}
+.action-icon-space {
+  display: inline-block;
+  width: 8px; /* Adjust this value to increase or decrease the spacing */
+}
+.ant-upload {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  color: rgba(0,0,0,.85);
+  font-size: 14px;
+  width: 100% !important;
+  font-variant: tabular-nums;
+  line-height: 1.5715;
+  list-style: none;
+  font-feature-settings: 'tnum';
+  outline: 0;
+}
+.full-width-upload {
+  width: 100%;
+}
+/*
+
+.form-content {
+  padding-bottom: 20px; !* Space between form content and the button *!
+}
+
+*/
+/*.announcement-form {
+overflow-y: auto;
+  overflow-x: hidden;
+height: 100vh;
+  max-height: 500px;
+}
+.launch-btn-container {
+  position: static;
+ width: 100%;
+  height: 50px;
+  background: #ffffff;
+  bottom: 0;
+}*/

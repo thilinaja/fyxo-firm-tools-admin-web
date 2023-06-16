@@ -1,0 +1,84 @@
+.logo {
+  width: 120px;
+  height: 31px;
+  position: relative;
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 16px 24px 16px 0;
+  float: left;
+  top: -1.5rem;
+}
+.logo img {
+  height: 40px; /* Adjust the height as needed */
+}
+
+.announcement {
+  flex-grow: 1;
+  margin-left: 10px; /* Adjust the margin as needed */
+}
+
+.avatar {
+  display: inline-block;
+  width: 40px; /* Adjust the width and height as needed */
+  height: 40px;
+  background-color: #ccc; /* Placeholder background color */
+  border-radius: 50%;
+}
+
+.dropdown {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 10px; /* Adjust the margin as needed */
+}
+
+[nz-menu] {
+  line-height: 64px;
+}
+
+nz-breadcrumb {
+  margin: 16px 0;
+}
+
+nz-content {
+  padding: 0 50px;
+}
+
+nz-footer {
+  text-align: center;
+}
+
+.inner-content {
+  background: #fff;
+  padding: 24px;
+  min-height: 280px;
+}
+.ant-input, .ant-select-selector, .ant-picker, .ant-input-group-addon, .ant-input-affix-wrapper, .ant-input-number, .ant-radio-button-wrapper, .ant-mentions {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 1px 0 rgba(0, 0, 0, 0.025);
+}
+.ant-upload {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  color: rgba(0,0,0,.85);
+  font-size: 14px;
+  width: 100% !important;
+  font-variant: tabular-nums;
+  line-height: 1.5715;
+  list-style: none;
+  font-feature-settings: 'tnum';
+  outline: 0;
+}
+.ant-avatar {
+  font-size: 14px;
+  display: inline-block;
+  color: #fff;
+  text-align: center;
+  background: #ccc;
+  position: relative;
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  line-height: 36px;
+  border-radius: 50%;
+  margin-top: -1.7rem;
+}

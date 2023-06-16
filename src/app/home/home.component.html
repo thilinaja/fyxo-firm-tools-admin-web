@@ -1,0 +1,244 @@
+<div class="container-fluid ">
+
+<div class="row mt-3">
+  <div class="col-md-12 col-lg-12">
+    <nz-card nzTitle="Announcement List" class="h-100">
+      <div class="d-flex justify-content-end">
+      <button nz-button nzType="primary" (click)="open()"><span nz-icon nzType="plus" nzTheme="outline" style="position: relative; top:-0.2rem"></span> Add New Announcement</button>
+      </div>
+      <nz-table class="mt-3"
+        stylw="width:100%"
+        #basicTable
+        #sortTable
+        [nzData]="listOfDisplayData"
+        #borderedTable
+        nzBordered
+        #headerTable
+        [nzLoading]="loading"
+        [nzPageSize]="5" [nzScroll]="{ x: '1000px' }">
+        <thead>
+        <tr>
+          <th nzCustomFilter nzColumnKey="cTitle" [nzSortFn]="sortFn"
+          >
+            Announcement Title
+
+          </th>
+          <th>Announcement Graphic</th>
+          <th>Redirect URL</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th nzWidth="110px">Status</th>
+          <th nzRight nzWidth="100px">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let data of basicTable.data">
+          <td>{{ data.cTitle }}</td>
+          <td>{{ data.cGrapic }}</td>
+          <td>{{ truncateURL(data.curl) }}</td>
+          <td>{{ data.cstartDate }}</td>
+          <td>{{ data.cendDate }}</td>
+          <td><span [ngClass]="{
+        'status-queued': data.cStatus === 'Queued',
+        'status-live': data.cStatus === 'Live',
+        'status-completed': data.cStatus === 'Completed',
+        'status-stopped': data.cStatus === 'Stopped'
+      }">{{ data.cStatus }}</span></td>
+          <td nzRight>
+            <i nz-icon nzType="edit" class="action-icon" nzTheme="fill"  ></i>
+            <span class="action-icon-space" ></span>
+            <i *ngIf="data.cStatus === 'Live'" nz-icon nzType="pause-circle" nzTheme="fill" class="action-icon"  style="color: #0B5ED7; cursor: pointer;"></i>
+            <i *ngIf="data.cStatus !== 'Live'" nz-icon nzType="play-circle" nzTheme="fill"  style="color: #0B5ED7; cursor: pointer;" ></i>
+            <span class="action-icon-space"></span>
+            <i nz-icon nzType="delete" class="action-icon"  nzTheme="fill" style="color: #EB1749; cursor: pointer;" ></i>
+          </td>
+        </tr>
+        </tbody>
+      </nz-table>
+
+    </nz-card>
+
+
+  </div>
+
+
+</div>
+  <!--add new announcement-->
+  <nz-drawer
+    [nzBodyStyle]="{ overflow: 'auto' }"
+    [nzMaskClosable]="false"
+    [nzWidth]="500"
+    [nzVisible]="visible"
+    nzTitle="Add New Annoucement"
+    [nzFooter]="footerTpl"
+    (nzOnClose)="close()"
+  >
+
+
+      <ng-container *nzDrawerContent>
+        <nz-card style="background:#F8F8F8; ">
+        <form nz-form  [formGroup]="form" (ngSubmit)="submitForm()">
+          <div class="row">
+
+            <div class="col-md-12 col-lg-12">
+              <nz-form-label nzRequired nzFor="aTitle">Announcement Title</nz-form-label>
+              <nz-form-item>
+
+                <nz-form-control nzErrorTip="Please add announcement title">
+                  <input formcontrolname="aTitle"  nz-input placeholder="Type here"  />
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+          </div>
+
+          <div class="row">
+
+            <div class="col-md-12 col-lg-12">
+              <nz-form-label nzRequired nzFor="comment">Description</nz-form-label>
+              <br>
+              <small>Maximum number of characters: 220</small>
+              <nz-form-item>
+
+                <nz-form-control nzErrorTip="Please add description">
+                  <nz-textarea-count [nzMaxCharacterCount]="220">
+                    <textarea rows="4" formControlName="comment" nz-input placeholder="Type here"></textarea>
+                  </nz-textarea-count>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+          </div>
+
+
+
+          <div class="row">
+            <div class="col-md 12 col-lg-12" >
+              <nz-form-label nzRequired nzFor="nzUpload">Announcement Graphic</nz-form-label>
+              <br>
+              <small>Recommended Dimensions: 630px X 160px</small>
+              <nz-form-item>
+
+                <nz-form-control nzErrorTip="Please add image">
+                  <nz-upload formcontrolname="nzUpload"  class="full-width-upload " nzAction="https://www.mocky.io/v2/5cc8019d300000980a055e76" [nzFileList]="fileList">
+                    <button nz-button  class="w-100">
+                      <span nz-icon nzType="upload"></span>
+                      Upload
+                    </button>
+                  </nz-upload>
+                </nz-form-control>
+              </nz-form-item></div>
+          </div>
+
+          <div class="row">
+            <div class="col-md 12 col-lg-12">
+              <nz-form-item>
+                <nz-form-control >
+                  <label nz-checkbox [(ngModel)]="checked">Redirect to external URL</label>
+                  <input formControlName="url" nz-input placeholder="Enter URL here"  />
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md 12 col-lg-12">
+              <nz-form-label >Select Time Zone</nz-form-label>
+              <nz-form-item>
+
+                <nz-form-control>
+                  <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select Time Zone" [(ngModel)]="selectedValue">
+                    <nz-option nzLabel="Asia/Colombo" nzValue="Asia/Colombo"></nz-option>
+
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <nz-form-label nzRequired nzFor="nzUpload">Start Date</nz-form-label>
+              <nz-form-item>
+
+                <nz-form-control nzErrorTip="Please add start date">
+                  <nz-date-picker  formcontrolname="startDate" class="w-100"  [(ngModel)]="date" (ngModelChange)="onChange($event)"></nz-date-picker>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+            <div class="col-md-6">
+              <nz-form-label > <small >Add a future date to schedule the announcement</small></nz-form-label>
+              <nz-form-item>
+
+
+                <nz-form-control>
+                  <nz-time-picker
+                    s="w-100"
+                    formcontrolname="startTime"
+                    [(ngModel)]="time"
+                    [nzUse12Hours]="true"
+                    class="w-100"
+                    (ngModelChange)="log($event)"
+                    nzFormat="h:mm a"
+                  ></nz-time-picker>
+                </nz-form-control>
+              </nz-form-item>
+
+
+            </div>
+
+
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <label nz-checkbox >End Date</label>
+              <nz-form-item>
+
+                <nz-form-control>
+                  <nz-date-picker  formcontrolname="" class="w-100"   ></nz-date-picker>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+            <div class="col-md-6">
+              <p></p>
+              <nz-form-item>
+
+
+                <nz-form-control>
+                  <nz-time-picker
+                    class="w-100"
+                    formcontrolname="endTime"
+                    [(ngModel)]="time"
+                    [nzUse12Hours]="true"
+                    class="w-100"
+
+                    nzFormat="h:mm a"
+                  ></nz-time-picker>
+                </nz-form-control>
+              </nz-form-item>
+
+
+            </div>
+
+
+          </div>
+
+        </form>
+
+
+
+
+</nz-card>
+      </ng-container>
+      <ng-template #footerTpl>
+        <div style="float: right">
+          <button nz-button style="margin-right: 8px;" (click)="close()">Clear</button>
+          <button nz-button nzType="primary" >Launch Announcement <span nz-icon nzType="send"></span></button>
+        </div>
+      </ng-template>
+  </nz-drawer>
+
+
+
+
+
+
+</div>
+

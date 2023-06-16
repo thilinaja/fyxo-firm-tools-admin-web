@@ -1,0 +1,26 @@
+
+<div class="form-container">
+<nz-card>
+  <img src="assets/img/Sheffield%20Haworth__CMYK_Stack.svg">
+  <p style="color: #2F2F30; font-weight: 700">Global Hub Announcements</p>
+<form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm()">
+  <nz-form-item>
+
+    <nz-form-control nzErrorTip="Please input your username!">
+      <nz-input-group nzPrefixIcon="user">
+        <input type="text" nz-input formControlName="userName" placeholder="Username" />
+      </nz-input-group>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item >
+    <nz-form-control nzErrorTip="Please input your Password!">
+      <nz-input-group nzPrefixIcon="lock">
+        <input type="password" nz-input formControlName="password" placeholder="Password" />
+      </nz-input-group>
+    </nz-form-control>
+  </nz-form-item>
+
+  <button nz-button class="login-form-button login-form-margin mt-3" nzType="primary">Log in</button>
+
+</form></nz-card>
+</div>
