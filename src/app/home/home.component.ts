@@ -1,9 +1,12 @@
 import { Component ,OnInit} from '@angular/core';
-import { NzUploadFile } from 'ng-zorro-antd/upload';
+import { NzUploadChangeParam, NzUploadFile } from 'ng-zorro-antd/upload';
 import {getISOWeek} from "ngx-bootstrap/chronos/units/week";
 import {NzTableFilterFn, NzTableFilterList, NzTableSortFn, NzTableSortOrder} from "ng-zorro-antd/table";
 import {en_US, NzI18nService, zh_CN} from "ng-zorro-antd/i18n";
 import {FormBuilder, FormGroup, UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
+import { AnnouncementService } from '../shared/services/announcement.service';
+import { Announcement, AnnouncementCreate, AnnouncementUpdate } from '../shared/module/announcement';
+import { environment } from 'src/environments/environment';
 
 interface ProjectBooked {
   key: string;
@@ -44,30 +47,64 @@ export class HomeComponent implements  OnInit{
   checked = true;
   selectedValue = null;
   time: Date | null = null;
-  constructor(private fb: FormBuilder,private i18n: NzI18nService,private formBuilder: FormBuilder) {
+  listOfDisplayData!: Announcement[];
+  selectedAnnouncement:string = '';
+  constructor(
+    private fb: FormBuilder,
+    private i18n: NzI18nService,
+    private formBuilder: FormBuilder,
+    private announcementService: AnnouncementService
+    ) {
     // Form initialization
     this.form = this.fb.group({
       aTitle: [null, [Validators.required]],
       comment: [null, [Validators.maxLength(220)]],
-      nzUpload: [null, [Validators.required]],
+      fileUpload: [null],
       url: [null],
       startDate: [null, [Validators.required]],
       startTime: [null],
       endDate: [null],
       endTime: [null]
     });
-    //Textarea with character count
-    /*this.form = this.formBuilder.group({
-      comment: [null, [Validators.maxLength(220)]]
-    });*/
+    
   }
 
   submitForm(): void {
+    var files = this.fileList;
+    debugger;
     if (this.form.valid) {
-      console.log('submit', this.form.value);
+      debugger
+      if(this.selectedAnnouncement === ''){
+        this.createAnnoucencement(this.form.value);
+      }else{
+        this.updateAnnouncement(this.form.value);
+      }
     } else {
+      
       this.markFormControlsAsDirty();
     }
+  }
+
+  handleChange(info: NzUploadChangeParam): void {
+    let fileList = [...info.fileList];
+
+    // 1. Limit the number of uploaded files
+    // Only to show two recent uploaded files, and old ones will be replaced by the new
+    fileList = fileList.slice(-2);
+
+    // 2. Read from response and show file link
+    fileList = fileList.map(file => {
+      if (file.response) {
+        // Component will show file.url as link
+        file.url = file.response.url;
+      }
+
+      return file;
+
+
+    });
+
+    this.fileList = fileList;
   }
 
   markFormControlsAsDirty(): void {
@@ -80,55 +117,20 @@ export class HomeComponent implements  OnInit{
 
 
   open(): void {
+    this.selectedAnnouncement = '';
     this.visible = true;
+  }
+
+  update(id:string): void{
+    this.selectedAnnouncement = id;
+    this.loadAnnouncementData(id);
+    this.visible = true;
+
   }
 
   close(): void {
     this.visible = false;
   }
-  // Project Booked
-  listOfData: ProjectBooked[] = [
-    {
-      key: '1',
-      cTitle: 'Test Announcement ',
-      cGrapic: 'Announcement.jpg',
-      curl: 'https://shglobalhub.com/',
-      cstartDate: '06-01-2023',
-      cendDate: '06-13-2023',
-      cStatus: 'Live',
-    },
-    {
-      key: '2',
-      cTitle: 'Test Announcement ',
-      cGrapic: 'Announcement.jpg',
-      curl: 'https://shglobalhub.com/',
-      cstartDate: '06-01-2023',
-      cendDate: '06-13-2023',
-      cStatus: 'Queued',
-    },
-    {
-      key: '3',
-      cTitle: 'Test Announcement ',
-      cGrapic: 'Announcement.jpg',
-      curl: 'https://shglobalhub.com/',
-      cstartDate: '06-01-2023',
-      cendDate: '06-13-2023',
-      cStatus: 'Completed',
-    },
-
-    {
-      key: '4',
-      cTitle: 'Test Announcement ',
-      cGrapic: 'Announcement.jpg',
-      curl: 'https://shglobalhub.com/',
-      cstartDate: '06-01-2023',
-      cendDate: '06-13-2023',
-      cStatus: 'Stopped',
-    },
-  ];
-  listOfDisplayData = [...this.listOfData];
-
-
 
   //URL Truncate
   truncateURL(url: string, maxLength: number = 30): string {
@@ -151,16 +153,7 @@ export class HomeComponent implements  OnInit{
     console.log(value);
   }
 //upload
-  fileList: NzUploadFile[] = [
-    {
-      uid: '1',
-      name: 'Announcement.jpg',
-      status: 'done',
-      response: 'Server Error 500', // custom error message to show
-      url: 'http://www.baidu.com/xxx.png'
-    },
-
-  ];
+  fileList: NzUploadFile[] = [];
 
   editItem(data: ProjectBooked): void {
     // Handle edit action for the item
@@ -190,8 +183,74 @@ export class HomeComponent implements  OnInit{
 
 
   ngOnInit(): void {
+    this.loadAnnouncement();
+  }
+
+  private loadAnnouncement(){
+    this.announcementService.GetAllAnnouncement().subscribe((val) => {
+      this.listOfDisplayData = val;
+    })
+  }
+
+  private createAnnoucencement(values: any){
+
+    
+    var obj:AnnouncementCreate = {
+        syndicateUserId:environment.siu,
+        title:values.aTitle,
+        graphicPath:'undefined    ',
+        redirectUrl:values.url,
+        startDate:values.startDate,
+        endDate:values.endDate,
+        status:1
+    }
+    this.announcementService.CreateAnnouncement(obj).subscribe((val) => {
+      alert('saved successfully');
+    })
+  }
+
+  private updateAnnouncement(values:any){
+    var obj:AnnouncementUpdate = {
+      id:this.selectedAnnouncement,
+      syndicateUserId:environment.siu,
+      title:values.aTitle,
+      graphicPath:'undefined    ',
+      redirectUrl:values.url,
+      startDate:values.startDate,
+      endDate:values.endDate,
+      status:1
+  }
+  this.announcementService.UpdateAnnouncement(obj).subscribe((val) => {
+    alert('saved successfully');
+  })
+  }
+
+  deleteAnnouncement(announcementId:any): void{
+    this.announcementService.DeleteAnnouncement(announcementId).subscribe((val) => {
+      alert('successfully removed');
+    })
+  }
+
+  onFileSelected(event:any):void{
+    debugger
+    const file:File = event.target.files[0];
+    
+    const formData = new FormData(); 
+    formData.append('file', file);
 
 
+    
+    this.announcementService.postProjectFile(formData);
+  }
+
+  loadAnnouncementData(id:string):void{
+    this.announcementService.getAnnouncement(id).subscribe((val) => {
+      this.form.controls['aTitle'].setValue(val.title);
+      this.form.controls['comment'].setValue('undefined');
+      this.form.controls['url'].setValue(val.redirectUrl);
+      this.form.controls['startDate'].setValue(val.startDate);
+      this.form.controls['endDate'].setValue(val.endDate);
+    })
   }
 
   sortFn = (a: ProjectBooked, b: ProjectBooked) => a.cTitle.localeCompare(b.cTitle);
