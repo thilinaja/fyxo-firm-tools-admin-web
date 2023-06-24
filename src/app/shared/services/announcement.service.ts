@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse, HttpEventType } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpEventType, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map, take } from 'rxjs';
 import { Announcement } from '../module/announcement';
@@ -65,26 +65,24 @@ export class AnnouncementService {
       );
   }
 
-  public postProjectFile(formData:any):boolean{
+  public postProjectFile(formData:any){
 
     //const formData = new FormData();
     //formData.append('file', file);
+    var uploadedId = '';
 
-    this.http.post(environment.base_url + '/File', formData, {reportProgress: true, observe: 'events'})
-      .subscribe({
-        next: (event) => {
-        if (event.type === HttpEventType.UploadProgress){
+    return this.http
+      .post(
+        environment.base_url + '/File',
+        formData
+      )
+      .pipe(
+        take(1),
+        map((value) => {
+          return value;
+        })
+      );
 
-        }
-         
-        else if (event.type === HttpEventType.Response) {
-         
-        }
-      },
-      error: (err: HttpErrorResponse) => console.log(err)
-    });
-
-    return true;
   }
 
   public getAnnouncement(id:string):Observable<Announcement>{

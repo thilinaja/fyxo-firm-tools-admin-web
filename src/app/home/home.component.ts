@@ -7,6 +7,7 @@ import {FormBuilder, FormGroup, UntypedFormBuilder, UntypedFormGroup, Validators
 import { AnnouncementService } from '../shared/services/announcement.service';
 import { Announcement, AnnouncementCreate, AnnouncementUpdate } from '../shared/module/announcement';
 import { environment } from 'src/environments/environment';
+import { Router } from '@angular/router';
 
 interface ProjectBooked {
   key: string;
@@ -46,6 +47,7 @@ export class HomeComponent implements  OnInit{
  // form: UntypedFormGroup;
   checked = true;
   selectedValue = null;
+  uploadedGraphicId = '';
   time: Date | null = null;
   listOfDisplayData!: Announcement[];
   selectedAnnouncement:string = '';
@@ -53,7 +55,8 @@ export class HomeComponent implements  OnInit{
     private fb: FormBuilder,
     private i18n: NzI18nService,
     private formBuilder: FormBuilder,
-    private announcementService: AnnouncementService
+    private announcementService: AnnouncementService,
+    private router: Router
     ) {
     // Form initialization
     this.form = this.fb.group({
@@ -66,6 +69,12 @@ export class HomeComponent implements  OnInit{
       endDate: [null],
       endTime: [null]
     });
+
+    let valid = localStorage.getItem('validuser');
+
+    if(valid != 'true'){
+      this.router.navigate(['/login']);
+    }
     
   }
 
@@ -198,13 +207,14 @@ export class HomeComponent implements  OnInit{
     var obj:AnnouncementCreate = {
         syndicateUserId:environment.siu,
         title:values.aTitle,
-        graphicPath:'undefined    ',
+        graphicPath:this.uploadedGraphicId,
         redirectUrl:values.url,
         startDate:values.startDate,
         endDate:values.endDate,
         status:1
     }
     this.announcementService.CreateAnnouncement(obj).subscribe((val) => {
+      this.uploadedGraphicId = '';
       alert('saved successfully');
     })
   }
@@ -214,13 +224,14 @@ export class HomeComponent implements  OnInit{
       id:this.selectedAnnouncement,
       syndicateUserId:environment.siu,
       title:values.aTitle,
-      graphicPath:'undefined    ',
+      graphicPath:this.uploadedGraphicId,
       redirectUrl:values.url,
       startDate:values.startDate,
       endDate:values.endDate,
       status:1
   }
   this.announcementService.UpdateAnnouncement(obj).subscribe((val) => {
+    this.uploadedGraphicId = '';
     alert('saved successfully');
   })
   }
@@ -231,16 +242,18 @@ export class HomeComponent implements  OnInit{
     })
   }
 
-  onFileSelected(event:any):void{
+  async onFileSelected(event:any):Promise<void>{
     debugger
     const file:File = event.target.files[0];
     
     const formData = new FormData(); 
     formData.append('file', file);
-
-
     
-    this.announcementService.postProjectFile(formData);
+    this.announcementService.postProjectFile(formData).subscribe((val) => {
+      var res:any = val;
+      this.uploadedGraphicId = res.data;
+    });
+    console.log(this.uploadedGraphicId);
   }
 
   loadAnnouncementData(id:string):void{
