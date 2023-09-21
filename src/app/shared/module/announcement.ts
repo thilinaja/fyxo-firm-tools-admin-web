@@ -9,6 +9,7 @@ export interface Announcement {
     startDate:Moment;
     endDate:Moment;
     status:number;
+    description:string;
 }
 
 export interface AnnouncementCreate {
@@ -19,6 +20,7 @@ export interface AnnouncementCreate {
     startDate:Moment;
     endDate:Moment;
     status:number;
+    description:string;
 }
 
 export interface AnnouncementUpdate {
@@ -30,4 +32,5 @@ export interface AnnouncementUpdate {
     startDate:Moment;
     endDate:Moment;
     status:number;
+    description:string;
 }

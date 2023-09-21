@@ -211,7 +211,8 @@ export class HomeComponent implements  OnInit{
         redirectUrl:values.url,
         startDate:values.startDate,
         endDate:values.endDate,
-        status:1
+        status:1,
+        description: values.comment
     }
     this.announcementService.CreateAnnouncement(obj).subscribe((val) => {
       this.uploadedGraphicId = '';
@@ -228,7 +229,8 @@ export class HomeComponent implements  OnInit{
       redirectUrl:values.url,
       startDate:values.startDate,
       endDate:values.endDate,
-      status:1
+      status:1,
+      description: values.comment
   }
   this.announcementService.UpdateAnnouncement(obj).subscribe((val) => {
     this.uploadedGraphicId = '';
@@ -259,7 +261,7 @@ export class HomeComponent implements  OnInit{
   loadAnnouncementData(id:string):void{
     this.announcementService.getAnnouncement(id).subscribe((val) => {
       this.form.controls['aTitle'].setValue(val.title);
-      this.form.controls['comment'].setValue('undefined');
+      this.form.controls['comment'].setValue(val.description);
       this.form.controls['url'].setValue(val.redirectUrl);
       this.form.controls['startDate'].setValue(val.startDate);
       this.form.controls['endDate'].setValue(val.endDate);
