@@ -79,17 +79,13 @@ export class HomeComponent implements  OnInit{
   }
 
   submitForm(): void {
-    var files = this.fileList;
-    debugger;
     if (this.form.valid) {
-      debugger
       if(this.selectedAnnouncement === ''){
         this.createAnnoucencement(this.form.value);
       }else{
         this.updateAnnouncement(this.form.value);
       }
     } else {
-      
       this.markFormControlsAsDirty();
     }
   }
@@ -202,8 +198,6 @@ export class HomeComponent implements  OnInit{
   }
 
   private createAnnoucencement(values: any){
-
-    
     var obj:AnnouncementCreate = {
         syndicateUserId:environment.siu,
         title:values.aTitle,
@@ -231,11 +225,11 @@ export class HomeComponent implements  OnInit{
       endDate:values.endDate,
       status:1,
       description: values.comment
-  }
-  this.announcementService.UpdateAnnouncement(obj).subscribe((val) => {
-    this.uploadedGraphicId = '';
-    alert('saved successfully');
-  })
+    }
+    this.announcementService.UpdateAnnouncement(obj).subscribe((val) => {
+      this.uploadedGraphicId = '';
+      alert('saved successfully');
+    })
   }
 
   deleteAnnouncement(announcementId:any): void{
@@ -265,6 +259,7 @@ export class HomeComponent implements  OnInit{
       this.form.controls['url'].setValue(val.redirectUrl);
       this.form.controls['startDate'].setValue(val.startDate);
       this.form.controls['endDate'].setValue(val.endDate);
+      this.uploadedGraphicId = val.graphicPath;
     })
   }
 

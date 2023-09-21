@@ -77,7 +77,7 @@
 
       <ng-container *nzDrawerContent>
         <nz-card style="background:#F8F8F8; ">
-        <form nz-form  [formGroup]="form">
+        <form nz-form [formGroup]="form">
           <div class="row">
 
             <div class="col-md-12 col-lg-12">
@@ -85,7 +85,7 @@
               <nz-form-item>
 
                 <nz-form-control nzErrorTip="Please add announcement title">
-                  <input formControlName="aTitle"  nz-input placeholder="Type here"  />
+                  <input formControlName="aTitle" id="aTitle" nz-input placeholder="Type here"  />
                 </nz-form-control>
               </nz-form-item>
             </div>
@@ -101,7 +101,7 @@
 
                 <nz-form-control nzErrorTip="Please add description">
                   <nz-textarea-count [nzMaxCharacterCount]="220">
-                    <textarea rows="4" formControlName="comment" nz-input placeholder="Type here"></textarea>
+                    <textarea rows="4" formControlName="comment" id="comment" nz-input placeholder="Type here"></textarea>
                   </nz-textarea-count>
                 </nz-form-control>
               </nz-form-item>
@@ -117,7 +117,7 @@
               <small>Recommended Dimensions: 630px X 160px</small>
               <nz-form-item>
 
-                <input type="file" class="file-upload" formControlName="fileUpload" (change)="onFileSelected($event)">
+                <input type="file" class="file-upload" formControlName="fileUpload" id="nzUpload" (change)="onFileSelected($event)">
               </nz-form-item>
             </div>
           </div>
@@ -126,7 +126,7 @@
             <div class="col-md 12 col-lg-12">
               <nz-form-item>
                 <nz-form-control >
-                  <label nz-checkbox [(ngModel)]="checked">Redirect to external URL</label>
+                  <label nz-checkbox>Redirect to external URL</label>
                   <input formControlName="url" nz-input placeholder="Enter URL here"  />
                 </nz-form-control>
               </nz-form-item>
@@ -138,7 +138,7 @@
               <nz-form-item>
 
                 <nz-form-control>
-                  <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select Time Zone" [(ngModel)]="selectedValue">
+                  <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select Time Zone" >
                     <nz-option nzLabel="Asia/Colombo" nzValue="Asia/Colombo"></nz-option>
 
                   </nz-select>
@@ -152,7 +152,7 @@
               <nz-form-item>
 
                 <nz-form-control nzErrorTip="Please add start date">
-                  <nz-date-picker  formControlName="startDate" class="w-100"  [(ngModel)]="date" (ngModelChange)="onChange($event)"></nz-date-picker>
+                  <nz-date-picker  formControlName="startDate" class="w-100"></nz-date-picker>
                 </nz-form-control>
               </nz-form-item>
             </div>
@@ -163,12 +163,9 @@
 
                 <nz-form-control>
                   <nz-time-picker
-                    s="w-100"
                     formControlName="startTime"
-                    [(ngModel)]="time"
                     [nzUse12Hours]="true"
                     class="w-100"
-                    (ngModelChange)="log($event)"
                     nzFormat="h:mm a"
                   ></nz-time-picker>
                 </nz-form-control>
@@ -199,7 +196,6 @@
                   <nz-time-picker
                     class="w-100"
                     formControlName="endTime"
-                    [(ngModel)]="time"
                     [nzUse12Hours]="true"
                     class="w-100"
 
