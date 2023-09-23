@@ -95,4 +95,26 @@ export class AnnouncementService {
         })
       );
   }
+
+  public Pause(id:string):Observable<boolean>{
+    return this.http
+      .post<BaseResponseModel<boolean>>(environment.base_url + '/Announcement/setstatus/' + environment.siu + '/' + id + '/' + 3, null)
+      .pipe(
+        take(1),
+        map((value) => {
+          return value.data;
+        })
+      );
+  }
+
+  public Play(id:string):Observable<boolean>{
+    return this.http
+      .post<BaseResponseModel<boolean>>(environment.base_url + '/Announcement/setstatus/' + environment.siu + '/' + id + '/' + 1, null)
+      .pipe(
+        take(1),
+        map((value) => {
+          return value.data;
+        })
+      );
+  }
 }

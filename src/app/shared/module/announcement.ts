@@ -7,9 +7,13 @@ export interface Announcement {
     graphicPath:string;
     redirectUrl:string;
     startDate:Moment;
+    startDateString:string;
     endDate:Moment;
+    endDateString:string;
     status:number;
     description:string;
+    utcOffset:string;
+    
 }
 
 export interface AnnouncementCreate {
@@ -21,6 +25,7 @@ export interface AnnouncementCreate {
     endDate:Moment;
     status:number;
     description:string;
+    utcOffset:string;
 }
 
 export interface AnnouncementUpdate {
@@ -33,4 +38,5 @@ export interface AnnouncementUpdate {
     endDate:Moment;
     status:number;
     description:string;
+    utcOffset:string;
 }

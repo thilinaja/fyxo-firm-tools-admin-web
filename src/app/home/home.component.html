@@ -36,19 +36,19 @@
           <td>{{ data.title }}</td>
           <td>{{ data.graphicPath }}</td>
           <td>{{ truncateURL(data.redirectUrl) }}</td>
-          <td>{{ data.startDate }}</td>
-          <td>{{ data.endDate }}</td>
-          <td><span [ngClass]="{
-        'status-queued': data.status === 0,
-        'status-live': data.status === 1,
-        'status-completed': data.status === 2,
-        'status-stopped': data.status === 3
-      }">{{ data.status }}</span></td>
+          <td>{{ data.startDateString }}</td>
+          <td>{{ data.endDateString }}</td>
+          <td>
+            <span *ngIf="data.status === 0" class="status-queued">Queued</span>
+            <span *ngIf="data.status === 1" class="status-live">Live</span>
+            <span *ngIf="data.status === 2" class="status-completed">Completed</span>
+            <span *ngIf="data.status === 3" class="status-stopped">Stopped</span>
+          </td>
           <td nzRight>
             <i nz-icon nzType="edit" class="action-icon" nzTheme="fill" (click)="update(data.id)" ></i>
             <span class="action-icon-space" ></span>
-            <i *ngIf="data.status === 1" nz-icon nzType="pause-circle" nzTheme="fill" class="action-icon"  style="color: #0B5ED7; cursor: pointer;"></i>
-            <i *ngIf="data.status !== 1" nz-icon nzType="play-circle" nzTheme="fill"  style="color: #0B5ED7; cursor: pointer;" ></i>
+            <i *ngIf="data.status === 1" nz-icon nzType="pause-circle" nzTheme="fill" class="action-icon"  style="color: #0B5ED7; cursor: pointer;" (click)="pause(data.id)"></i>
+            <i *ngIf="data.status !== 1" nz-icon nzType="play-circle" nzTheme="fill"  style="color: #0B5ED7; cursor: pointer;" (click)="play(data.id)"></i>
             <span class="action-icon-space"></span>
             <i nz-icon nzType="delete" class="action-icon"  nzTheme="fill" style="color: #EB1749; cursor: pointer;" (click)="deleteAnnouncement(data.id)"></i>
           </td>
@@ -136,11 +136,9 @@
             <div class="col-md 12 col-lg-12">
               <nz-form-label >Select Time Zone</nz-form-label>
               <nz-form-item>
-
                 <nz-form-control>
-                  <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select Time Zone" >
-                    <nz-option nzLabel="Asia/Colombo" nzValue="Asia/Colombo"></nz-option>
-
+                  <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select Time Zone" formControlName="timezone">
+                    <nz-option nzLabel="Asia/Colombo" nzValue="+05:30"></nz-option>
                   </nz-select>
                 </nz-form-control>
               </nz-form-item>

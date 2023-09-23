@@ -8,6 +8,7 @@ import { AnnouncementService } from '../shared/services/announcement.service';
 import { Announcement, AnnouncementCreate, AnnouncementUpdate } from '../shared/module/announcement';
 import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
+import * as moment from 'moment';
 
 interface ProjectBooked {
   key: string;
@@ -67,7 +68,8 @@ export class HomeComponent implements  OnInit{
       startDate: [null, [Validators.required]],
       startTime: [null],
       endDate: [null],
-      endTime: [null]
+      endTime: [null],
+      timezone: [null]
     });
 
     let valid = localStorage.getItem('validuser');
@@ -193,53 +195,103 @@ export class HomeComponent implements  OnInit{
 
   private loadAnnouncement(){
     this.announcementService.GetAllAnnouncement().subscribe((val) => {
+
+      //change date format
+      val.forEach(element => {
+        element.startDateString = moment(element.startDate).format('YYYY-MM-DD hh:mm a');
+        element.endDateString = moment(element.endDate).format('YYYY-MM-DD hh:mm a');
+      });
+
+      debugger
       this.listOfDisplayData = val;
     })
   }
 
   private createAnnoucencement(values: any){
+
+    const syy = new Date(values.startDate).getFullYear();
+    const smm = new Date(values.startDate).getMonth() + 1;    
+    const sdd = new Date(values.startDate).getDate();
+
+    const sh = new Date(values.startTime).getHours();
+    const sm = new Date(values.startTime).getMinutes();
+
+    const startDateProcessed = new Date(syy + "-" + smm + "-" + sdd + " " + sh + ":" + sm);
+
+    const eyy = new Date(values.endDate).getFullYear();
+    const emm = new Date(values.endDate).getMonth() + 1;    
+    const edd = new Date(values.endDate).getDate();
+
+    const eh = new Date(values.endTime).getHours();
+    const em = new Date(values.endTime).getMinutes();
+
+    const endDateProcessed = new Date(eyy + "-" + emm + "-" + edd + " " + eh + ":" + em);
+
     var obj:AnnouncementCreate = {
         syndicateUserId:environment.siu,
         title:values.aTitle,
         graphicPath:this.uploadedGraphicId,
         redirectUrl:values.url,
-        startDate:values.startDate,
-        endDate:values.endDate,
-        status:1,
-        description: values.comment
+        startDate:moment(startDateProcessed),
+        endDate:moment(endDateProcessed),
+        status:0,
+        description: values.comment,
+        utcOffset: values.timezone
     }
     this.announcementService.CreateAnnouncement(obj).subscribe((val) => {
       this.uploadedGraphicId = '';
       alert('saved successfully');
+      location.reload();
     })
   }
 
   private updateAnnouncement(values:any){
+
+    const syy = new Date(values.startDate).getFullYear();
+    const smm = new Date(values.startDate).getMonth() + 1;    
+    const sdd = new Date(values.startDate).getDate();
+
+    const sh = new Date(values.startTime).getHours();
+    const sm = new Date(values.startTime).getMinutes();
+
+    const startDateProcessed = new Date(syy + "-" + smm + "-" + sdd + " " + sh + ":" + sm);
+
+    const eyy = new Date(values.endDate).getFullYear();
+    const emm = new Date(values.endDate).getMonth() + 1;    
+    const edd = new Date(values.endDate).getDate();
+
+    const eh = new Date(values.endTime).getHours();
+    const em = new Date(values.endTime).getMinutes();
+
+    const endDateProcessed = new Date(eyy + "-" + emm + "-" + edd + " " + eh + ":" + em);
+
     var obj:AnnouncementUpdate = {
       id:this.selectedAnnouncement,
       syndicateUserId:environment.siu,
       title:values.aTitle,
       graphicPath:this.uploadedGraphicId,
       redirectUrl:values.url,
-      startDate:values.startDate,
-      endDate:values.endDate,
-      status:1,
-      description: values.comment
+      startDate:moment(startDateProcessed),
+      endDate:moment(endDateProcessed),
+      status:0,
+      description: values.comment,
+      utcOffset: values.timezone
     }
     this.announcementService.UpdateAnnouncement(obj).subscribe((val) => {
       this.uploadedGraphicId = '';
       alert('saved successfully');
+      location.reload();
     })
   }
 
   deleteAnnouncement(announcementId:any): void{
     this.announcementService.DeleteAnnouncement(announcementId).subscribe((val) => {
       alert('successfully removed');
+      location.reload();
     })
   }
 
   async onFileSelected(event:any):Promise<void>{
-    debugger
     const file:File = event.target.files[0];
     
     const formData = new FormData(); 
@@ -258,8 +310,25 @@ export class HomeComponent implements  OnInit{
       this.form.controls['comment'].setValue(val.description);
       this.form.controls['url'].setValue(val.redirectUrl);
       this.form.controls['startDate'].setValue(val.startDate);
+      this.form.controls['startTime'].setValue(val.startDate);
       this.form.controls['endDate'].setValue(val.endDate);
+      this.form.controls['endTime'].setValue(val.endDate);
+      this.form.controls['timezone'].setValue(val.utcOffset);
       this.uploadedGraphicId = val.graphicPath;
+    })
+  }
+
+  pause(id:string):void{
+    this.announcementService.Pause(id).subscribe((val) => {
+      alert('saved successfully');
+      location.reload();
+    })
+  }
+
+  play(id:string):void{
+    this.announcementService.Play(id).subscribe((val) => {
+      alert('saved successfully');
+      location.reload();
     })
   }
 
