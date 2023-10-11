@@ -141,7 +141,7 @@ export class HomeComponent implements  OnInit{
 
   //URL Truncate
   truncateURL(url: string, maxLength: number = 30): string {
-    if (url.length <= maxLength) {
+    if (url == null || url.length <= maxLength) {
       return url;
     }
 
@@ -195,14 +195,11 @@ export class HomeComponent implements  OnInit{
 
   private loadAnnouncement(){
     this.announcementService.GetAllAnnouncement().subscribe((val) => {
-
       //change date format
       val.forEach(element => {
-        element.startDateString = moment(element.startDate).format('YYYY-MM-DD hh:mm a');
-        element.endDateString = moment(element.endDate).format('YYYY-MM-DD hh:mm a');
+        if(element.startDate != null) element.startDateString = moment(element.startDate).format('YYYY-MM-DD hh:mm a');
+        if(element.endDate != null) element.endDateString = moment(element.endDate).format('YYYY-MM-DD hh:mm a');
       });
-
-      debugger
       this.listOfDisplayData = val;
     })
   }

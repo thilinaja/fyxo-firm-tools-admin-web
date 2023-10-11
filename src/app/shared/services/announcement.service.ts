@@ -14,11 +14,19 @@ export class AnnouncementService {
 
   public GetAllAnnouncement(): Observable<Announcement[]> {
     return this.http
-      .get<BaseResponseModel<Announcement[]>>(environment.base_url + '/Announcement/get/' + environment.siu)
+      .get<Announcement[]>(
+        environment.api + '/Announcements',
+        {
+          params:{
+            code: environment.apiCode,
+            sid: environment.siu
+          }
+        }
+      )
       .pipe(
         take(1),
         map((value) => {
-          return value.data;
+          return value;
         })
       );
   }
@@ -26,7 +34,8 @@ export class AnnouncementService {
   public CreateAnnouncement(obj: any){
     return this.http
       .post<BaseResponseModel<Announcement>>(
-        environment.base_url + '/Announcement/create/' + environment.siu,
+        environment.api + '/AnnouncementsCreate/' + '?code=' + environment.apiCode +
+        '&sid=' + environment.siu,
         obj
       )
       .pipe(
@@ -40,7 +49,9 @@ export class AnnouncementService {
   public UpdateAnnouncement(obj: any){
     return this.http
       .post<BaseResponseModel<Announcement>>(
-        environment.base_url + '/Announcement/update/' + environment.siu,
+        environment.api + '/AnnouncementsUpdate/' +
+        '?code=' + environment.apiCode +
+        '&sid=' + environment.siu,
         obj
       )
       .pipe(
@@ -54,7 +65,10 @@ export class AnnouncementService {
   public DeleteAnnouncement(announcementId: string){
     return this.http
       .post<BaseResponseModel<Announcement>>(
-        environment.base_url + '/Announcement/delete/' + environment.siu + '/' + announcementId,
+        environment.api + '/AnnouncementsDelete/' + 
+        '?code=' + environment.apiCode +
+      '&sid=' + environment.siu +
+      '&aid=' + announcementId,
         null
       )
       .pipe(
@@ -73,7 +87,7 @@ export class AnnouncementService {
 
     return this.http
       .post(
-        environment.base_url + '/File',
+        environment.api + '/File',
         formData
       )
       .pipe(
@@ -87,33 +101,54 @@ export class AnnouncementService {
 
   public getAnnouncement(id:string):Observable<Announcement>{
     return this.http
-      .get<BaseResponseModel<Announcement>>(environment.base_url + '/Announcement/get/' + environment.siu + '/' + id)
+      .get<Announcement>(
+        environment.api + '/AnnouncementsDetails',
+        {
+          params:{
+            code: environment.apiCode,
+            sid: environment.siu,
+            aid: id
+          }
+        }
+      )
       .pipe(
         take(1),
         map((value) => {
-          return value.data;
+          return value;
         })
       );
   }
 
   public Pause(id:string):Observable<boolean>{
     return this.http
-      .post<BaseResponseModel<boolean>>(environment.base_url + '/Announcement/setstatus/' + environment.siu + '/' + id + '/' + 3, null)
+      .post<boolean>(environment.api + '/AnnouncementsSetStatus/'+
+      '?code=' + environment.apiCode +
+      '&sid=' + environment.siu +
+      '&aid=' + id +
+      '&status=3',
+      null
+       )
       .pipe(
         take(1),
         map((value) => {
-          return value.data;
+          return value;
         })
       );
   }
 
   public Play(id:string):Observable<boolean>{
     return this.http
-      .post<BaseResponseModel<boolean>>(environment.base_url + '/Announcement/setstatus/' + environment.siu + '/' + id + '/' + 1, null)
+      .post<boolean>(environment.api + '/AnnouncementsSetStatus/'+
+      '?code=' + environment.apiCode +
+      '&sid=' + environment.siu +
+      '&aid=' + id +
+      '&status=1',
+      null
+      )
       .pipe(
         take(1),
         map((value) => {
-          return value.data;
+          return value;
         })
       );
   }
