@@ -47,8 +47,8 @@
           <td nzRight>
             <i nz-icon nzType="edit" class="action-icon" nzTheme="fill" (click)="update(data.id)" ></i>
             <span class="action-icon-space" ></span>
-            <i *ngIf="data.status === 1" nz-icon nzType="pause-circle" nzTheme="fill" class="action-icon"  style="color: #0B5ED7; cursor: pointer;" (click)="pause(data.id)"></i>
-            <i *ngIf="data.status !== 1" nz-icon nzType="play-circle" nzTheme="fill"  style="color: #0B5ED7; cursor: pointer;" (click)="play(data.id)"></i>
+            <i *ngIf="data.status === 1" nz-icon nzType="pause-circle" nzTheme="fill" class="action-icon"  style="color: #1f4080; cursor: pointer;" (click)="pause(data.id)"></i>
+            <i *ngIf="data.status !== 1" nz-icon nzType="play-circle" nzTheme="fill"  style="color: #1f4080; cursor: pointer;" (click)="play(data.id)"></i>
             <span class="action-icon-space"></span>
             <i nz-icon nzType="delete" class="action-icon"  nzTheme="fill" style="color: #EB1749; cursor: pointer;" (click)="deleteAnnouncement(data.id)"></i>
           </td>
